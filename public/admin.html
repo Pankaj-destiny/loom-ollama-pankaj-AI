@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard — Loom</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: block; overflow: auto; height: auto; }
+  .wrap { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin: 24px 0; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+  .stat-card .num { font-size: 26px; font-weight: 700; }
+  .stat-card .label { color: var(--text-dim); font-size: 12.5px; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-dim); font-weight: 500; }
+  .verdict-TRUE { color: #5fb894; } .verdict-FALSE { color: #e06c6c; } .verdict-UNVERIFIED { color: #d6b35f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Admin Dashboard</h1>
+  <div id="content">Loading…</div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const key = params.get('key') || '';
+
+fetch('/api/admin/stats?key=' + encodeURIComponent(key))
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) {
+      document.getElementById('content').innerHTML = '<p style="color:#e06c6c">' + data.error + '</p>';
+      return;
+    }
+    const agentRows = data.byAgent.map(a => `<tr><td>${a.agent}</td><td>${a.count}</td><td>${a.credits}</td></tr>`).join('');
+    const fcRows = data.recentFactchecks.map(f => `<tr><td>${f.claim}</td><td class="verdict-${f.verdict}">${f.verdict}</td><td>${f.created_at}</td></tr>`).join('');
+    document.getElementById('content').innerHTML = `
+      <div class="stat-grid">
+        <div class="stat-card"><div class="num">${data.totalUsers}</div><div class="label">Total users</div></div>
+        <div class="stat-card"><div class="num">${data.totalRequests}</div><div class="label">Total requests</div></div>
+        <div class="stat-card"><div class="num">${data.creditsSpent}</div><div class="label">Credits spent</div></div>
+        <div class="stat-card"><div class="num">${data.totalFactchecks}</div><div class="label">Fact-checks run</div></div>
+      </div>
+      <h3>Usage by agent</h3>
+      <table><tr><th>Agent</th><th>Requests</th><th>Credits</th></tr>${agentRows}</table>
+      <h3>Recent fact-checks</h3>
+      <table><tr><th>Claim</th><th>Verdict</th><th>When</th></tr>${fcRows}</table>
+    `;
+  });
+</script>
+</body>
+</html>

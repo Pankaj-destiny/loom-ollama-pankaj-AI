@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing — Loom</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .pricing-wrap { max-width: 900px; margin: 60px auto; padding: 0 20px; }
+  .pricing-wrap h1 { text-align: center; font-size: 28px; margin-bottom: 8px; }
+  .pricing-wrap p.sub { text-align: center; color: var(--text-dim); margin-bottom: 40px; }
+  .plans { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+  .plan-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px 24px; width: 240px; text-align: center;
+  }
+  .plan-card h3 { margin: 0 0 6px 0; font-size: 18px; }
+  .plan-card .price { font-size: 30px; font-weight: 700; margin: 12px 0; }
+  .plan-card .price span { font-size: 13px; color: var(--text-dim); font-weight: 400; }
+  .plan-card ul { list-style: none; padding: 0; margin: 16px 0; color: var(--text-dim); font-size: 13.5px; text-align: left; }
+  .plan-card ul li { padding: 5px 0; }
+  .plan-card button {
+    width: 100%; padding: 10px; border-radius: 8px; border: none;
+    background: var(--accent); color: #0b120f; font-weight: 600; cursor: pointer; margin-top: 10px;
+  }
+  .plan-card.featured { border-color: var(--accent); }
+  .note { text-align: center; color: var(--text-dim); font-size: 12.5px; margin-top: 30px; }
+  body { display: block; overflow: auto; height: auto; }
+</style>
+</head>
+<body>
+<div class="pricing-wrap">
+  <h1>Choose your plan</h1>
+  <p class="sub">Credits refill monthly. 1 chat message = 1 credit · 1 fact-check = 3 credits.</p>
+  <div class="plans">
+    <div class="plan-card">
+      <h3>Free</h3>
+      <div class="price">₹0<span>/mo</span></div>
+      <ul>
+        <li>50 credits/month</li>
+        <li>Chat agent</li>
+        <li>Image tool</li>
+      </ul>
+      <button disabled style="opacity:0.5;cursor:default;">Current plan</button>
+    </div>
+    <div class="plan-card featured">
+      <h3>Pro</h3>
+      <div class="price">₹499<span>/mo</span></div>
+      <ul>
+        <li>2,000 credits/month</li>
+        <li>Chat + Fact-check agent</li>
+        <li>Priority speed</li>
+        <li>Image tool</li>
+      </ul>
+      <button onclick="upgrade()">Upgrade to Pro</button>
+    </div>
+    <div class="plan-card">
+      <h3>Business</h3>
+      <div class="price">₹1999<span>/mo</span></div>
+      <ul>
+        <li>Unlimited credits</li>
+        <li>All agents</li>
+        <li>Admin dashboard access</li>
+        <li>Affiliate revenue share</li>
+      </ul>
+      <button onclick="upgrade()">Upgrade to Business</button>
+    </div>
+  </div>
+  <p class="note">Payments require a Stripe account connected on the server (see README). Until configured, upgrade buttons will show a setup message.</p>
+</div>
+<script>
+async function upgrade() {
+  const res = await fetch('/api/create-checkout-session', { method: 'POST' });
+  const data = await res.json();
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    alert(data.error || 'Payments not configured yet.');
+  }
+}
+</script>
+</body>
+</html>

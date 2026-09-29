@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loom — AI Chat, Fact-Check &amp; News Studio</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#5fb894">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="brand"><div class="brand-mark"></div> Loom</div>
+  <button id="new-chat-btn" onclick="newChat()">＋ New chat</button>
+  <div id="history-list"></div>
+  <div class="sidebar-footer">
+    <a href="pricing.html" style="color:var(--text-dim);text-decoration:none;">Upgrade plan</a>
+    <button id="theme-toggle" onclick="toggleTheme()">Theme</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="topbar">
+    <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="chat" onclick="switchTab('chat')">Chat</button>
+      <button class="tab" data-tab="factcheck" onclick="switchTab('factcheck')">Fact-Check</button>
+      <button class="tab" data-tab="image" onclick="switchTab('image')">Image Tool</button>
+    </div>
+
+    <select id="lang-select" title="Reply language">
+      <option value="auto">Auto</option>
+      <option value="hinglish">Hinglish</option>
+      <option value="hindi">Hindi</option>
+      <option value="marathi">Marathi</option>
+      <option value="english">English</option>
+    </select>
+    <span id="credits-badge" title="Remaining credits">•••</span>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div id="panel-chat" class="panel active">
+    <div id="chat-scroll">
+      <div id="empty-state" class="empty-state">
+        <h1>What's on your mind?</h1>
+        <p>Chat in Hindi, Hinglish, Marathi or English — Loom replies in your style.</p>
+        <div class="suggestion-row">
+          <div class="suggestion-chip" onclick="useSuggestion(this)">Aaj ka weather kaisa rahega?</div>
+          <div class="suggestion-chip" onclick="useSuggestion(this)">Explain quantum computing simply</div>
+          <div class="suggestion-chip" onclick="useSuggestion(this)">मराठीत एक कविता लिहा</div>
+        </div>
+      </div>
+      <div id="chat-inner"></div>
+    </div>
+    <div id="composer-wrap">
+      <div id="composer">
+        <textarea id="input" rows="1" placeholder="Message Loom..." onkeydown="handleKey(event)" oninput="autoGrow(this)"></textarea>
+        <button id="send-btn" onclick="sendMessage()">↑</button>
+      </div>
+      <div class="footnote">Loom can make mistakes. Check important info.</div>
+    </div>
+  </div>
+
+  <!-- FACT-CHECK PANEL -->
+  <div id="panel-factcheck" class="panel">
+    <div class="tool-wrap">
+      <h2>News Fact-Check Agent</h2>
+      <p class="tool-desc">Paste a news claim, headline, or statement. The agent searches live sources and only reports what those sources actually confirm — it will say "unverified" rather than guess.</p>
+      <textarea id="fc-input" rows="3" placeholder="e.g. Government ne kal petrol price 5 rupaye kam kiya..."></textarea>
+      <button id="fc-btn" onclick="runFactcheck()">Verify this claim</button>
+      <div id="fc-result"></div>
+    </div>
+  </div>
+
+  <!-- IMAGE TOOL PANEL -->
+  <div id="panel-image" class="panel">
+    <div class="tool-wrap">
+      <h2>Image Editor</h2>
+      <p class="tool-desc">Upload an image, add text/headline overlays, crop, and apply filters — useful for quick news graphics.</p>
+      <input type="file" id="img-upload" accept="image/*">
+      <div id="canvas-wrap">
+        <canvas id="img-canvas" width="640" height="400"></canvas>
+      </div>
+      <div class="img-controls">
+        <input type="text" id="overlay-text" placeholder="Headline / caption text">
+        <div class="btn-row">
+          <button onclick="addTextOverlay()">Add Text</button>
+          <button onclick="applyFilter('grayscale')">Grayscale</button>
+          <button onclick="applyFilter('bright')">Brighten</button>
+          <button onclick="resetImage()">Reset</button>
+          <button onclick="downloadImage()">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

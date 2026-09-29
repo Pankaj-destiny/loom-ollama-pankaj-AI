@@ -1,0 +1,22 @@
+{
+  "name": "Loom — AI Chat & News Studio",
+  "short_name": "Loom",
+  "description": "Multi-language AI chat, news fact-checking agent, and image editing tool.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#16171c",
+  "theme_color": "#5fb894",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
